@@ -2,6 +2,7 @@ import { Index, Show, createEffect, createSignal, onCleanup, onMount } from 'sol
 import { useThrottleFn } from 'solidjs-use'
 import { generateSignature } from '@/utils/auth'
 import IconClear from './icons/Clear'
+import IconSend from './icons/Send'
 import MessageItem from './MessageItem'
 import SystemRoleSettings from './SystemRoleSettings'
 import ErrorMessageItem from './ErrorMessageItem'
@@ -79,7 +80,7 @@ export default () => {
   }, 300, false, true)
 
   const instantToBottom = () => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' })
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' })
   }
 
   const requestWithLatestMessage = async() => {
@@ -230,8 +231,8 @@ export default () => {
         when={!loading()}
         fallback={() => (
           <div class="gen-cb-wrapper">
-            <span>AI is thinking...</span>
-            <div class="gen-cb-stop" onClick={stopStreamFetch}>Stop</div>
+            <span>正在想...</span>
+            <div class="gen-cb-stop" onClick={stopStreamFetch}>打断</div>
           </div>
         )}
       >
@@ -251,14 +252,14 @@ export default () => {
             class="gen-textarea"
           />
           <button onClick={handleButtonClick} disabled={systemRoleEditing()} gen-slate-btn>
-            Send
+            <IconSend />
           </button>
           <button title="Clear" onClick={clear} disabled={systemRoleEditing()} gen-slate-btn>
             <IconClear />
           </button>
         </div>
       </Show>
-      <div class="fixed bottom-5 left-5 rounded-md hover:bg-slate/10 w-fit h-fit transition-colors active:scale-90" class:stick-btn-on={isStick()}>
+      <div class="fixed bottom-5 right-5 rounded-md hover:bg-slate/10 w-fit h-fit transition-colors active:scale-90" class:stick-btn-on={isStick()}>
         <div>
           <button class="p-2.5 text-base" title="stick to bottom" type="button" onClick={() => setStick(!isStick())}>
             <div i-ph-arrow-line-down-bold />

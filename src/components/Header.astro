@@ -4,13 +4,17 @@ import Themetoggle from './Themetoggle.astro'
 ---
 
 <header>
-  <div class="fb items-center">
-    <Logo />
+  <div class="fb mt-2">
+    <div class="fb">
+      <span class="gpt-title">神奇海螺</span>
+      <span class="inline-block"><Logo /></span>
+      <span class="gpt-subtitle">俱乐部</span>
+    </div>
     <Themetoggle />
   </div>
-  <div class="fi mt-2">
-    <span class="gpt-title">ChatGPT</span>
-    <span class="gpt-subtitle">Demo</span>
+  <div class="mt-1 text-slate">
+    <span>Powered by OpenAI (GPT-3.5), </span>
+    <!-- <span>|</span> -->
+    <a href="https://github.com/aimkiray/chatgpt-conch" class="b-slate-link" target="_blank">Source Code.</a>
   </div>
-  <p mt-1 op-60>Based on OpenAI API (gpt-3.5-turbo).</p>
 </header>

@@ -12,10 +12,10 @@ export default ({ data, onRetry }: Props) => {
       {data.code && <div class="text-red mb-1">{data.code}</div>}
       <div class="text-red op-70 text-sm">{data.message}</div>
       {onRetry && (
-        <div class="fie px-3 mb-2">
+        <div class="fie mb-4">
           <div onClick={onRetry} class="gpt-retry-btn border-red/50 text-red">
             <IconRefresh />
-            <span>Regenerate</span>
+            <span>重来</span>
           </div>
         </div>
       )}

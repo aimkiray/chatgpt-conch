@@ -4,6 +4,9 @@ import mdKatex from 'markdown-it-katex'
 import mdHighlight from 'markdown-it-highlightjs'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import IconRefresh from './icons/Refresh'
+import IconConch from './icons/ConchFluent'
+import IconArtist from './icons/Artist'
+import IconCat from './icons/Cat'
 import type { Accessor } from 'solid-js'
 import type { ChatMessage } from '@/types'
 
@@ -15,11 +18,6 @@ interface Props {
 }
 
 export default ({ role, message, showRetry, onRetry }: Props) => {
-  const roleClass = {
-    system: 'bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300',
-    user: 'bg-gradient-to-r from-purple-400 to-yellow-400',
-    assistant: 'bg-gradient-to-r from-yellow-200 via-green-200 to-green-300',
-  }
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
 
@@ -69,19 +67,29 @@ export default ({ role, message, showRetry, onRetry }: Props) => {
   }
 
   return (
-    <div class="py-2 -mx-4 px-4 transition-colors md:hover:bg-slate/3">
-      <div class="flex gap-3 rounded-lg" class:op-75={role === 'user'}>
-        <div class={`shrink-0 w-7 h-7 mt-4 rounded-full op-80 ${roleClass[role]}`} />
-        <div class="message prose break-words overflow-hidden" innerHTML={htmlString()} />
-      </div>
-      {showRetry?.() && onRetry && (
-        <div class="fie px-3 mb-2">
+    <div>
+      {role === 'user' && (
+        <div class="mt-4 mb-2"><IconCat /></div>
+      )}
+      {role === 'assistant' && (
+        <div class="mt-4 mb-2"><IconConch /></div>
+      )}
+      {role === 'system' && (
+        <div class="mt-4 mb-2"><IconArtist /></div>
+      )}
+      <div class="px-4 transition-colors border-solid border-1 border-slate md:hover:bg-slate/6">
+        <div class="flex gap-3 rounded-lg" class:op-75={role === 'user'}>
+          <div class="message prose break-words overflow-hidden" innerHTML={htmlString()} />
+        </div>
+        {showRetry?.() && onRetry && (
+        <div class="fie mb-4">
           <div onClick={onRetry} class="gpt-retry-btn">
             <IconRefresh />
-            <span>Regenerate</span>
+            <span>重来</span>
           </div>
         </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
