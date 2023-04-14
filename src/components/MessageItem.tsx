@@ -4,9 +4,9 @@ import mdKatex from 'markdown-it-katex'
 import mdHighlight from 'markdown-it-highlightjs'
 import { useClipboard, useEventListener } from 'solidjs-use'
 import IconRefresh from './icons/Refresh'
-import IconConch from './icons/ConchFluent'
-import IconArtist from './icons/Artist'
-import IconCat from './icons/Cat'
+import IconConch from './icons/ConchContrast'
+import IconArtist from './icons/ArtistContrast'
+import IconCat from './icons/FaceContrast'
 import type { Accessor } from 'solid-js'
 import type { ChatMessage } from '@/types'
 
@@ -18,6 +18,11 @@ interface Props {
 }
 
 export default ({ role, message, showRetry, onRetry }: Props) => {
+  const roleClass = {
+    system: 'border-purple-400',
+    user: 'border-slate-400',
+    assistant: 'border-rose-400',
+  }
   const [source] = createSignal('')
   const { copy, copied } = useClipboard({ source, copiedDuring: 1000 })
 
@@ -77,12 +82,12 @@ export default ({ role, message, showRetry, onRetry }: Props) => {
       {role === 'system' && (
         <div class="mt-4 mb-2"><IconArtist /></div>
       )}
-      <div class="px-4 transition-colors border-solid border-1 border-slate md:hover:bg-slate/6">
+      <div class={`px-2 md:px-4 transition-colors border-solid border md:hover:bg-slate/6 ${roleClass[role]}`}>
         <div class="flex gap-3 rounded-lg" class:op-75={role === 'user'}>
           <div class="message prose break-words overflow-hidden" innerHTML={htmlString()} />
         </div>
         {showRetry?.() && onRetry && (
-        <div class="fie mb-4">
+        <div class="fie mb-2 md:mb-4">
           <div onClick={onRetry} class="gpt-retry-btn">
             <IconRefresh />
             <span>重来</span>

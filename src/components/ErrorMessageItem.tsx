@@ -8,11 +8,11 @@ interface Props {
 
 export default ({ data, onRetry }: Props) => {
   return (
-    <div class="my-4 px-4 py-3 border border-red/50 bg-red/10">
+    <div class="p-2 my-4 md:p-4 border border-red/50 bg-red/10">
       {data.code && <div class="text-red mb-1">{data.code}</div>}
       <div class="text-red op-70 text-sm">{data.message}</div>
       {onRetry && (
-        <div class="fie mb-4">
+        <div class="fie">
           <div onClick={onRetry} class="gpt-retry-btn border-red/50 text-red">
             <IconRefresh />
             <span>重来</span>

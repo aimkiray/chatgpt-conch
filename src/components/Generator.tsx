@@ -3,6 +3,7 @@ import { useThrottleFn } from 'solidjs-use'
 import { generateSignature } from '@/utils/auth'
 import IconClear from './icons/Clear'
 import IconSend from './icons/Send'
+import IconDown from './icons/Down'
 import MessageItem from './MessageItem'
 import SystemRoleSettings from './SystemRoleSettings'
 import ErrorMessageItem from './ErrorMessageItem'
@@ -231,7 +232,7 @@ export default () => {
         when={!loading()}
         fallback={() => (
           <div class="gen-cb-wrapper">
-            <span>正在想...</span>
+            <span>思考中...</span>
             <div class="gen-cb-stop" onClick={stopStreamFetch}>打断</div>
           </div>
         )}
@@ -259,12 +260,10 @@ export default () => {
           </button>
         </div>
       </Show>
-      <div class="fixed bottom-5 right-5 rounded-md hover:bg-slate/10 w-fit h-fit transition-colors active:scale-90" class:stick-btn-on={isStick()}>
-        <div>
-          <button class="p-2.5 text-base" title="stick to bottom" type="button" onClick={() => setStick(!isStick())}>
-            <div i-ph-arrow-line-down-bold />
-          </button>
-        </div>
+      <div class="fixed bottom-8 right-4 md:right-8 rounded-md w-fit h-fit transition-colors active:scale-90">
+        <button class="text-base" title="stick to bottom" type="button" onClick={() => setStick(!isStick())}>
+          <IconDown />
+        </button>
       </div>
     </div>
   )
