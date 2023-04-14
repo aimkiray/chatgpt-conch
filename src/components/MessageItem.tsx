@@ -82,12 +82,12 @@ export default ({ role, message, showRetry, onRetry }: Props) => {
       {role === 'system' && (
         <div class="mt-4 mb-2"><IconArtist /></div>
       )}
-      <div class={`px-2 md:px-4 transition-colors border-solid border md:hover:bg-slate/6 ${roleClass[role]}`}>
+      <div class={`p-2 md:p-4 transition-colors border-solid border md:hover:bg-slate/6 ${roleClass[role]}`}>
         <div class="flex gap-3 rounded-lg" class:op-75={role === 'user'}>
           <div class="message prose break-words overflow-hidden" innerHTML={htmlString()} />
         </div>
         {showRetry?.() && onRetry && (
-        <div class="fie mb-2 md:mb-4">
+        <div class="fie mt-2 md:mt-4">
           <div onClick={onRetry} class="gpt-retry-btn">
             <IconRefresh />
             <span>重来</span>
