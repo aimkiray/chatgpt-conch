@@ -1,5 +1,6 @@
 import { Index, Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { useThrottleFn } from 'solidjs-use'
+import GPT3Tokenizer from 'gpt3-tokenizer'
 import { generateSignature } from '@/utils/auth'
 import IconClear from './icons/Clear'
 import IconSend from './icons/Send'
@@ -7,6 +8,8 @@ import IconDown from './icons/Down'
 import MessageItem from './MessageItem'
 import SystemRoleSettings from './SystemRoleSettings'
 import ErrorMessageItem from './ErrorMessageItem'
+import Menu from './Menu'
+import { chatBot } from './MagicConch'
 import type { ChatMessage, ErrorMessage } from '@/types'
 
 export default () => {
@@ -17,12 +20,19 @@ export default () => {
   const [currentError, setCurrentError] = createSignal<ErrorMessage>()
   const [currentAssistantMessage, setCurrentAssistantMessage] = createSignal('')
   const [loading, setLoading] = createSignal(false)
+  const [pageLoading, setPageLoading] = createSignal(true)
   const [controller, setController] = createSignal<AbortController>(null)
   const [isStick, setStick] = createSignal(false)
+  const tokenizer = new GPT3Tokenizer({ type: 'gpt3' }) // or 'codex'
+  const [tokenCount, setTokenCount] = createSignal(0)
+  const [selectedModel, setSelectedModel] = createSignal('gpt-3.5-turbo-0301')
+  const [showTokenCount, setShowTokenCount] = createSignal(true)
+  const [member, setMember] = createSignal(false)
 
   createEffect(() => (isStick() && smoothToBottom()))
 
   onMount(() => {
+    setPageLoading(false)
     let lastPostion = window.scrollY
 
     window.addEventListener('scroll', () => {
@@ -48,6 +58,7 @@ export default () => {
     onCleanup(() => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
     })
+    getMessageToken()
   })
 
   const handleBeforeUnload = () => {
@@ -72,6 +83,10 @@ export default () => {
         content: inputValue,
       },
     ])
+    if (!member()) {
+      requestWithNoFee(inputValue)
+      return
+    }
     requestWithLatestMessage()
     instantToBottom()
   }
@@ -104,6 +119,7 @@ export default () => {
         method: 'POST',
         body: JSON.stringify({
           messages: requestMessageList,
+          model: selectedModel(),
           time: timestamp,
           pass: storagePassword,
           sign: await generateSignature({
@@ -163,6 +179,7 @@ export default () => {
       setCurrentAssistantMessage('')
       setLoading(false)
       setController(null)
+      getMessageToken()
       inputRef.focus()
     }
   }
@@ -173,6 +190,7 @@ export default () => {
     setMessageList([])
     setCurrentAssistantMessage('')
     setCurrentError(null)
+    setTokenCount(0)
   }
 
   const stopStreamFetch = () => {
@@ -192,6 +210,35 @@ export default () => {
     }
   }
 
+  const getMessageToken = () => {
+    const requestMessageList = [...messageList()]
+    if (currentSystemRoleSettings()) {
+      requestMessageList.unshift({
+        role: 'system',
+        content: currentSystemRoleSettings(),
+      })
+    }
+    let messageStr = ''
+    requestMessageList.forEach((element) => {
+      messageStr += `${element.content} `
+    })
+    messageStr += ` ${inputRef.value}`
+    const encoded: { bpe: number[], text: string[] } = tokenizer.encode(messageStr.trim())
+    setTokenCount(encoded.bpe.length)
+  }
+
+  function requestWithNoFee(input: string) {
+    setLoading(true)
+    setCurrentAssistantMessage('')
+    setCurrentError(null)
+    const response = chatBot(input)
+    if (response)
+      setCurrentAssistantMessage(currentAssistantMessage() + response)
+
+    archiveCurrentMessage()
+    isStick() && instantToBottom()
+  }
+
   const handleKeydown = (e: KeyboardEvent) => {
     if (e.isComposing || e.shiftKey)
       return
@@ -204,6 +251,14 @@ export default () => {
 
   return (
     <div my-6>
+      <Menu
+        selectedModel={selectedModel()}
+        onModelChange={setSelectedModel}
+        showTokenCount={showTokenCount()}
+        onToggleTokenCount={setShowTokenCount}
+        member={member()}
+        onToggleMember={setMember}
+      />
       <SystemRoleSettings
         canEdit={() => messageList().length === 0}
         systemRoleEditing={systemRoleEditing}
@@ -237,10 +292,10 @@ export default () => {
           </div>
         )}
       >
-        <div class="gen-text-wrapper" class:op-50={systemRoleEditing()}>
+        <div class="gen-text-wrapper" class:op-50={pageLoading() || systemRoleEditing()}>
           <textarea
             ref={inputRef!}
-            disabled={systemRoleEditing()}
+            disabled={pageLoading() || systemRoleEditing()}
             onKeyDown={handleKeydown}
             placeholder="Enter something..."
             autocomplete="off"
@@ -248,17 +303,21 @@ export default () => {
             onInput={() => {
               inputRef.style.height = 'auto'
               inputRef.style.height = `${inputRef.scrollHeight}px`
+              getMessageToken()
             }}
             rows="1"
             class="gen-textarea"
           />
-          <button onClick={handleButtonClick} disabled={systemRoleEditing()} gen-slate-btn>
+          <button onClick={handleButtonClick} disabled={pageLoading() || systemRoleEditing()} gen-slate-btn>
             <IconSend />
           </button>
-          <button title="Clear" onClick={clear} disabled={systemRoleEditing()} gen-slate-btn>
+          <button title="Clear" onClick={clear} disabled={pageLoading() || systemRoleEditing()} gen-slate-btn>
             <IconClear />
           </button>
         </div>
+        <Show when={showTokenCount()}>
+          <div class="text-xs op-30">预估 Token: {tokenCount()}（最大 4096，请用输入栏右侧按钮清理）</div>
+        </Show>
       </Show>
       <div class="fixed bottom-8 right-4 md:right-8 rounded-md w-fit h-fit transition-colors active:scale-90">
         <button class="text-base" title="stick to bottom" type="button" onClick={() => setStick(!isStick())}>
