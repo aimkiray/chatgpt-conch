@@ -15,4 +15,6 @@ services:
       # - SECRET_KEY=YOUR_SECRET_KEY
       # - SITE_PASSWORD=YOUR_SITE_PASSWORD
       # - OPENAI_API_MODEL=YOUR_OPENAI_API_MODEL
+      # - MEMBER=no
+      # - TOKEN_COUNT=yes
 

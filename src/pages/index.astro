@@ -6,12 +6,15 @@ import Generator from '../components/Generator'
 import '../message.css'
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/atom-one-dark.css'
+const model = import.meta.env.OPENAI_API_MODEL || 'gpt-3.5-turbo-0301'
+const member = import.meta.env.MEMBER || 'no'
+const tokenCount = import.meta.env.TOKEN_COUNT || 'yes'
 ---
 
-<Layout title="神奇海螺">
+<Layout title="Magic Conch">
   <main class="my-0 mx-auto pt-24 pb-16 px-4 md:px-8 max-w-prose">
     <Header />
-    <Generator client:load />
+    <Generator model={model} member={member} tokenCount={tokenCount} client:load />
     <!-- <Footer /> -->
   </main>
 </Layout>

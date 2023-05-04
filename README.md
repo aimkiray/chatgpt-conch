@@ -4,13 +4,9 @@ English | [简体中文](./README.zh-CN.md)
 
 A demo repo based on [OpenAI GPT-3.5 Turbo API.](https://platform.openai.com/docs/guides/chat)
 
-**🍿 Live preview**: https://chatgpt.ddiu.me
-
-**🏖️ V2 Version(Beta)**: https://v2.chatgpt.ddiu.me
+**🍿 Live preview**: https://chatgpt-conch.vercel.app/
 
 > ⚠️ Notice: Our API Key limit has been exhausted. So the demo site is not available now.
-
-![chat-logo](https://cdn.staticaly.com/gh/yzh990918/static@master/chat-logo.webp)
 
 ## Running Locally
 
@@ -109,6 +105,8 @@ services:
       # - SECRET_KEY=YOUR_SECRET_KEY
       # - SITE_PASSWORD=YOUR_SITE_PASSWORD
       # - OPENAI_API_MODEL=YOUR_OPENAI_API_MODEL
+      # - MEMBER=no
+      # - TOKEN_COUNT=yes
 ```
 
 ```bash
@@ -124,7 +122,7 @@ Please refer to the official deployment documentation：https://docs.astro.build
 
 ## Environment Variables
 
-You can control the website through environment variables.
+You can control the website through environment variables, all environment variables can find their corresponding configuration in the `.env.example` file.
 
 | Name | Description | Default |
 | --- | --- | --- |
@@ -135,6 +133,8 @@ You can control the website through environment variables.
 | `SECRET_KEY` | Secret string for the project. Use for generating signatures for API calls | `null` |
 | `SITE_PASSWORD` | Set password for site, support multiple password separated by comma. If not set, site will be public | `null` |
 | `OPENAI_API_MODEL` | ID of the model to use. [List models](https://platform.openai.com/docs/api-reference/models/list) | `gpt-3.5-turbo` |
+| `MEMBER` | Whether to join the Magic Conch Club | `no` |
+| `TOKEN_COUNT` | hether to show estimated price | `yes` |
 
 
 ## Frequently Asked Questions

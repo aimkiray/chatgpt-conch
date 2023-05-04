@@ -1,6 +1,6 @@
 import { Index, Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import { useThrottleFn } from 'solidjs-use'
-import GPT3Tokenizer from 'gpt3-tokenizer'
+import { encode } from '@/utils/tokenizer/encoder'
 import { generateSignature } from '@/utils/auth'
 import IconClear from './icons/Clear'
 import IconSend from './icons/Send'
@@ -12,7 +12,13 @@ import Menu from './Menu'
 import { chatBot } from './MagicConch'
 import type { ChatMessage, ErrorMessage } from '@/types'
 
-export default () => {
+interface EnvProps {
+  model: string
+  member: string
+  tokenCount: string
+}
+
+export default (props: EnvProps) => {
   let inputRef: HTMLTextAreaElement
   const [currentSystemRoleSettings, setCurrentSystemRoleSettings] = createSignal('')
   const [systemRoleEditing, setSystemRoleEditing] = createSignal(false)
@@ -23,11 +29,21 @@ export default () => {
   const [pageLoading, setPageLoading] = createSignal(true)
   const [controller, setController] = createSignal<AbortController>(null)
   const [isStick, setStick] = createSignal(false)
-  const tokenizer = new GPT3Tokenizer({ type: 'gpt3' }) // or 'codex'
+  //   const tokenizer = new GPT3Tokenizer({ type: 'gpt3' }) // or 'codex'
   const [tokenCount, setTokenCount] = createSignal(0)
-  const [selectedModel, setSelectedModel] = createSignal('gpt-3.5-turbo-0301')
-  const [showTokenCount, setShowTokenCount] = createSignal(true)
-  const [member, setMember] = createSignal(false)
+  const [selectedModel, setSelectedModel] = createSignal(props.model)
+  const [showTokenCount, setShowTokenCount] = createSignal(props.tokenCount === 'yes')
+  const [member, setMember] = createSignal(props.member === 'yes')
+  const maxToken = {
+    'gpt-3.5-turbo-0301': '4096',
+    'gpt-4': '8192',
+    'gpt-4-32k': '32768',
+  }
+  const modelPrice = {
+    'gpt-3.5-turbo-0301': 0.002,
+    'gpt-4': 0.06,
+    'gpt-4-32k': 0.12,
+  }
 
   createEffect(() => (isStick() && smoothToBottom()))
 
@@ -223,11 +239,12 @@ export default () => {
       messageStr += `${element.content} `
     })
     messageStr += ` ${inputRef.value}`
-    const encoded: { bpe: number[], text: string[] } = tokenizer.encode(messageStr.trim())
-    setTokenCount(encoded.bpe.length)
+    // const encoded: { bpe: number[], text: string[] } = tokenizer.encode(messageStr.trim())
+    // setTokenCount(encoded.bpe.length)
+    setTokenCount(encode(messageStr.trim()).length)
   }
 
-  function requestWithNoFee(input: string) {
+  const requestWithNoFee = (input: string) => {
     setLoading(true)
     setCurrentAssistantMessage('')
     setCurrentError(null)
@@ -316,7 +333,20 @@ export default () => {
           </button>
         </div>
         <Show when={showTokenCount()}>
-          <div class="text-xs op-30">预估 Token: {tokenCount()}（最大 4096，请用输入栏右侧按钮清理）</div>
+          <Show when={member()}>
+            <div class="text-xs op-30">
+              预估消耗 ${((modelPrice[selectedModel()] / 1000) * tokenCount()).toFixed(6)} / {tokenCount()} tokens
+              <div class="mt-1" />
+              Max {maxToken[selectedModel()]} tokens, Price ${modelPrice[selectedModel()]} / 1K tokens
+            </div>
+          </Show>
+          <Show when={!member()}>
+            <div class="text-xs op-30">
+              预估消耗 $0 / {tokenCount()} tokens
+              <div class="mt-1" />
+              Max ∞ tokens, Price $0 / 1K tokens
+            </div>
+          </Show>
         </Show>
       </Show>
       <div class="fixed bottom-8 right-4 md:right-8 rounded-md w-fit h-fit transition-colors active:scale-90">

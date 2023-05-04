@@ -97,12 +97,12 @@ export default (props: MenuProps) => {
           <div class="inline-flex items-center">
             <span class="leading-5 mr-2">选择模型</span>
             <div class="relative">
-              <button id="toggleDropdown" class="flex items-center rounded-full leading-5 text-xs bg-slate-400/10 py-1 px-3 space-x-2 hover:bg-slate-400/20 dark:highlight-white/5" onClick={toggleDropdown} disabled={pageLoading()}>
-                {GPT_MODELS.find(model => model.value === selectedModel()).label}
+              <button id="toggleDropdown" class="flex items-center rounded-full leading-5 text-xs bg-slate-400/10 py-1 px-3 space-x-2 hover:bg-slate-400/20 dark:highlight-white/5" onClick={toggleDropdown} disabled={pageLoading() || !member()} class:op-50={!pageLoading() && !member()}>
+                {member() ? GPT_MODELS.find(model => model.value === selectedModel()).label : 'MAGIC-CONCH'}
                 <svg width="6" height="3" class="ml-2 overflow-visible" aria-hidden="true"><path d="M0 0L3 3L6 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>
               </button>
               <Show when={showDropdown()}>
-                <div class="absolute top-full mt-1 py-2 w-40 bg-white border border-solid text-xs leading-6 font-semibold text-slate-700 dark:bg-slate-600 dark:text-slate-300 dark:highlight-white/5">
+                <div class="absolute top-full z-50 mt-1 py-2 w-40 bg-white border border-solid text-xs leading-6 font-semibold text-slate-700 dark:bg-slate-600 dark:text-slate-300 dark:highlight-white/5">
                   {GPT_MODELS.map(model => (
                     <a class="block px-3 py-1 cursor-pointer hover:bg-slate-400/10" onClick={() => handleModelButtonClick(model.value)}>{model.label}</a>
                   ))}
@@ -113,27 +113,29 @@ export default (props: MenuProps) => {
         </div>
 
         <div class="menu-item">
-          <label class="inline-flex items-center">
+          <label class="relative inline-flex items-center cursor-pointer">
             <input
+              type="checkbox"
               onChange={handleToggleMember}
               checked={member()}
               disabled={pageLoading()}
-              type="checkbox"
-              class="rounded bg-gray-200 border-transparent focus:border-transparent focus:bg-gray-200 text-gray-700 focus:ring-1 focus:ring-offset-2 focus:ring-gray-500"
+              class="sr-only peer"
             />
+            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-purple-200 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-200" />
             <span class="ml-2">参加俱乐部</span>
           </label>
         </div>
 
         <div class="menu-item">
-          <label class="inline-flex items-center">
+          <label class="relative inline-flex items-center cursor-pointer">
             <input
+              type="checkbox"
               onChange={handleToggleTokenCount}
               checked={showTokenCount()}
               disabled={pageLoading()}
-              type="checkbox"
-              class="rounded bg-gray-200 border-transparent focus:border-transparent focus:bg-gray-200 text-gray-700 focus:ring-1 focus:ring-offset-2 focus:ring-gray-500"
+              class="sr-only peer"
             />
+            <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-purple-200 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-200" />
             <span class="ml-2">计数器</span>
           </label>
         </div>

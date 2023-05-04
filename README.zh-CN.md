@@ -2,15 +2,11 @@
 
 [English](./README.md) | 简体中文
 
-一个基于 [OpenAI GPT-3.5 Turbo API](https://platform.openai.com/docs/guides/chat) 的 demo。
+一个基于 [OpenAI API](https://platform.openai.com/docs/guides/chat) 的 demo。
 
-**🍿 在线预览**: https://chatgpt.ddiu.me
-
-**🏖️ V2 版本(Beta)**: https://v2.chatgpt.ddiu.me
+**🍿 在线预览**: https://chatgpt-conch.vercel.app/
 
 > ⚠️ 注意: 我们的API密钥限制已用尽。所以演示站点现在不可用。
-
-![chat-logo](https://cdn.staticaly.com/gh/yzh990918/static@master/chat-logo.webp)
 
 ## 本地运行
 
@@ -106,6 +102,8 @@ services:
       # - SECRET_KEY=YOUR_SECRET_KEY
       # - SITE_PASSWORD=YOUR_SITE_PASSWORD
       # - OPENAI_API_MODEL=YOUR_OPENAI_API_MODEL
+      # - MEMBER=no
+      # - TOKEN_COUNT=yes
 ```
 
 ```bash
@@ -121,7 +119,7 @@ docker-compose down
 
 ## 环境变量
 
-配置本地或者部署的环境变量
+配置本地或者部署的环境变量，全部配置参见 `.env.example` 文件。
 
 | 名称 | 描述 | 默认 |
 | --- | --- | --- |
@@ -132,6 +130,8 @@ docker-compose down
 | `SECRET_KEY` | 项目的秘密字符串。用于生成 API 调用的签名 | `null` |
 | `SITE_PASSWORD` | 为网站设置密码，支持使用英文逗号创建多个密码。如果未设置，则该网站将是公开的 | `null` |
 | `OPENAI_API_MODEL` | 使用的 OpenAI 模型. [模型列表](https://platform.openai.com/docs/api-reference/models/list) | `gpt-3.5-turbo` |
+| `MEMBER` | 是否加入神奇海螺俱乐部 | `no` |
+| `TOKEN_COUNT` | 是否显示计价器 | `yes` |
 
 ## 常见问题
 
