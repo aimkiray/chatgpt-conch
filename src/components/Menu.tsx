@@ -11,9 +11,16 @@ interface MenuProps {
 }
 
 const GPT_MODELS = [
-  { value: 'gpt-3.5-turbo-0301', label: 'GPT-3.5' },
-  { value: 'gpt-4', label: 'GPT-4' },
-  { value: 'gpt-4-32k', label: 'GPT-4-32K' },
+  { value: 'gpt-3.5-turbo', label: 'gpt-3.5-turbo' },
+  { value: 'gpt-3.5-turbo-0301', label: 'gpt-3.5-turbo-0301' },
+  { value: 'gpt-3.5-turbo-0613', label: 'gpt-3.5-turbo-0613' },
+  { value: 'gpt-3.5-turbo-16k', label: 'gpt-3.5-turbo-16k' },
+  { value: 'gpt-4', label: 'gpt-4' },
+  { value: 'gpt-4-0314', label: 'gpt-4-0314' },
+  { value: 'gpt-4-0613', label: 'gpt-4-0613' },
+  { value: 'gpt-4-32k', label: 'gpt-4-32k' },
+  { value: 'gpt-4-32k-0314', label: 'gpt-4-32k-0314' },
+  { value: 'gpt-4-32k-0613', label: 'gpt-4-32k-0613' },
 ]
 
 export default (props: MenuProps) => {
