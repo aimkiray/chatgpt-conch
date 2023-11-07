@@ -28,10 +28,14 @@ export default (props: MenuProps) => {
 
   onMount(() => {
     try {
-      if (localStorage.getItem('selectedModel')) {
-        setSelectedModel(localStorage.getItem('selectedModel'))
-        props.onModelChange(localStorage.getItem('selectedModel'))
+      let prevModel = localStorage.getItem('selectedModel')
+      if (!prevModel || !GPT_MODELS.find(model => model.value === prevModel)) {
+        prevModel = GPT_MODELS[0].value
+        localStorage.setItem('selectedModel', prevModel)
       }
+
+      setSelectedModel(prevModel)
+      props.onModelChange(prevModel)
 
       if (localStorage.getItem('showTokenCount')) {
         setShowTokenCount(localStorage.getItem('showTokenCount') === 'true')
