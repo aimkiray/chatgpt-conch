@@ -38,7 +38,7 @@ export default (props: Props) => {
         <Show when={!props.currentSystemRoleSettings() && props.canEdit()}>
           <span onClick={() => props.setSystemRoleEditing(!props.systemRoleEditing())} class="sys-edit-btn">
             <IconEnv />
-            <span>Add System Role</span>
+            <span class="pr-1">Cosplay</span>
           </span>
         </Show>
       </Show>

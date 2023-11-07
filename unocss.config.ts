@@ -51,4 +51,18 @@ export default defineConfig({
     'sys-edit-btn': 'inline-fcc gap-1 text-sm bg-slate/20 px-2 py-1 transition-colors cursor-pointer hover:bg-slate/50',
     'stick-btn-on': '!bg-$c-fg text-$c-bg hover:op-80',
   }],
+  theme: {
+    colors: {
+      mcdonalds: '#FFC72C', // 基础麦当劳金色
+      mcdonaldsLight: '#FFF0B3',
+      mcdonaldsDark: '#E5B82C',
+    },
+    gradients: {
+      mcdonaldsGlow: {
+        from: 'mcdonalds',
+        to: 'mcdonaldsDark',
+        via: 'mcdonaldsLight',
+      },
+    },
+  },
 })

@@ -143,8 +143,6 @@ export default (props: EnvProps) => {
         modelName = 'gpt-4-1106-preview'
       }
 
-      console.error(requestMessageList)
-
       if (currentSystemRoleSettings()) {
         requestMessageList.unshift({
           role: 'system',
@@ -363,14 +361,14 @@ export default (props: EnvProps) => {
           </Show>
           <Show when={!member()}>
             <div class="text-xs op-30">
-              预估消耗 $0 / {tokenCount()} tokens
+              预估消耗 $0.000000 / {tokenCount()} tokens
               {/* <div class="mt-1" />
               Max ∞ tokens, Price $0 / 1K tokens */}
             </div>
           </Show>
         </Show>
         <div>
-          <p class="text-xs op-30 mt-1">由于降本增效，GPT4 只有上一条的记忆，GPT3 不受影响😎😎😎。</p>
+          <p class="text-xs op-30 mt-1">由于降本增效，Mc4 只有 1s 的记忆，Mc3.5 不受影响😎😎😎</p>
         </div>
       </Show>
       <div class="fixed bottom-8 right-4 md:right-8 rounded-md w-fit h-fit transition-colors active:scale-90">

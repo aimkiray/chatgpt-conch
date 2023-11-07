@@ -11,12 +11,12 @@ interface MenuProps {
 }
 
 const GPT_MODELS = [
-  { value: 'gpt-3.5-turbo', label: 'gpt-3.5-turbo' },
-  { value: 'gpt-3.5-turbo-0301', label: 'gpt-3.5-turbo-0301' },
-  { value: 'gpt-3.5-turbo-0613', label: 'gpt-3.5-turbo-0613' },
-  { value: 'gpt-3.5-turbo-16k', label: 'gpt-3.5-turbo-16k' },
-  { value: 'gpt-4', label: 'gpt-4' },
-  { value: 'gpt-4-1106-preview', label: 'gpt-4-1106-preview' },
+  { value: 'gpt-3.5-turbo', label: 'mc-3.5-turbo' },
+  { value: 'gpt-3.5-turbo-0301', label: 'mc-3.5-turbo-0301' },
+  { value: 'gpt-3.5-turbo-0613', label: 'mc-3.5-turbo-0613' },
+  { value: 'gpt-3.5-turbo-16k', label: 'mc-3.5-turbo-16k' },
+  { value: 'gpt-4', label: 'mc-4' },
+  { value: 'gpt-4-1106-preview', label: 'mc-4-1106-preview' },
 ]
 
 export default (props: MenuProps) => {
@@ -102,7 +102,7 @@ export default (props: MenuProps) => {
       <div class="menu-container text-sm font-semibold" class:op-50={pageLoading()}>
         <div class="menu-item">
           <div class="inline-flex items-center">
-            <span class="leading-5 mr-2">选择模型</span>
+            <span class="leading-5 mr-2">随心配</span>
             <div class="relative">
               <button id="toggleDropdown" class="flex items-center rounded-full leading-5 text-xs bg-slate-400/10 py-1 px-3 space-x-2 hover:bg-slate-400/20 dark:highlight-white/5" onClick={toggleDropdown} disabled={pageLoading() || !member()} class:op-50={!pageLoading() && !member()}>
                 {member() ? GPT_MODELS.find(model => model.value === selectedModel()).label : 'MAGIC-CONCH'}
@@ -129,7 +129,7 @@ export default (props: MenuProps) => {
               class="sr-only peer"
             />
             <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-purple-200 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-200" />
-            <span class="ml-2">参加俱乐部</span>
+            <span class="ml-2">O麦金会员</span>
           </label>
         </div>
 
@@ -143,7 +143,7 @@ export default (props: MenuProps) => {
               class="sr-only peer"
             />
             <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-purple-200 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-purple-200" />
-            <span class="ml-2">计数器</span>
+            <span class="ml-2">小计</span>
           </label>
         </div>
 
