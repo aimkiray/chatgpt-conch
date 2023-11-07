@@ -34,29 +34,21 @@ export default (props: EnvProps) => {
   const [selectedModel, setSelectedModel] = createSignal(props.model)
   const [showTokenCount, setShowTokenCount] = createSignal(props.tokenCount === 'yes')
   const [member, setMember] = createSignal(props.member === 'yes')
-  const maxToken = {
-    'gpt-3.5-turbo': '4096',
-    'gpt-3.5-turbo-0301': '4096',
-    'gpt-3.5-turbo-0613': '4096',
-    'gpt-3.5-turbo-16k': '16384',
-    'gpt-4': '8192',
-    'gpt-4-0314': '8192',
-    'gpt-4-0613': '8192',
-    'gpt-4-32k': '32768',
-    'gpt-4-32k-0314': '32768',
-    'gpt-4-32k-0613': '32768',
-  }
+  // const maxToken = {
+  //   'gpt-3.5-turbo': '4096',
+  //   'gpt-3.5-turbo-0301': '4096',
+  //   'gpt-3.5-turbo-0613': '4096',
+  //   'gpt-3.5-turbo-16k': '16384',
+  //   'gpt-4': '8192',
+  //   'gpt-4-1106-preview': '8192',
+  // }
   const modelPrice = {
     'gpt-3.5-turbo': 0.002,
     'gpt-3.5-turbo-0301': 0.002,
     'gpt-3.5-turbo-0613': 0.002,
     'gpt-3.5-turbo-16k': 0.002,
-    'gpt-4': 0.06,
-    'gpt-4-0314': 0.06,
-    'gpt-4-0613': 0.06,
-    'gpt-4-32k': 0.12,
-    'gpt-4-32k-0314': 0.12,
-    'gpt-4-32k-0613': 0.12,
+    'gpt-4': 0.03,
+    'gpt-4-1106-preview': 0.03,
   }
 
   createEffect(() => (isStick() && smoothToBottom()))
@@ -72,8 +64,8 @@ export default (props: EnvProps) => {
     })
 
     try {
-      if (localStorage.getItem('messageList'))
-        setMessageList(JSON.parse(localStorage.getItem('messageList')))
+      // if (localStorage.getItem('messageList'))
+      //   setMessageList(JSON.parse(localStorage.getItem('messageList')))
 
       if (localStorage.getItem('systemRoleSettings'))
         setCurrentSystemRoleSettings(localStorage.getItem('systemRoleSettings'))
@@ -137,7 +129,22 @@ export default (props: EnvProps) => {
     try {
       const controller = new AbortController()
       setController(controller)
-      const requestMessageList = [...messageList()]
+
+      // 取得模型名称
+      let modelName = selectedModel()
+      let requestMessageList = [...messageList()]
+
+      // 如果模型名称包含 "gpt4"，则只保留最近两条消息
+      if (modelName.includes('16k') && requestMessageList.length > 2)
+        requestMessageList = requestMessageList.slice(-2)
+
+      if (modelName.includes('gpt-4') && requestMessageList.length > 2) {
+        requestMessageList = requestMessageList.slice(-2)
+        modelName = 'gpt-4-1106-preview'
+      }
+
+      console.error(requestMessageList)
+
       if (currentSystemRoleSettings()) {
         requestMessageList.unshift({
           role: 'system',
@@ -149,7 +156,7 @@ export default (props: EnvProps) => {
         method: 'POST',
         body: JSON.stringify({
           messages: requestMessageList,
-          model: selectedModel(),
+          model: modelName,
           time: timestamp,
           pass: storagePassword,
           sign: await generateSignature({
@@ -350,18 +357,21 @@ export default (props: EnvProps) => {
           <Show when={member()}>
             <div class="text-xs op-30">
               预估消耗 ${((modelPrice[selectedModel()] / 1000) * tokenCount()).toFixed(6)} / {tokenCount()} tokens
-              <div class="mt-1" />
-              Max {maxToken[selectedModel()]} tokens, Price ${modelPrice[selectedModel()]} / 1K tokens
+              {/* <div class="mt-1" />
+              Max {maxToken[selectedModel()]} tokens, Price ${modelPrice[selectedModel()]} / 1K tokens */}
             </div>
           </Show>
           <Show when={!member()}>
             <div class="text-xs op-30">
               预估消耗 $0 / {tokenCount()} tokens
-              <div class="mt-1" />
-              Max ∞ tokens, Price $0 / 1K tokens
+              {/* <div class="mt-1" />
+              Max ∞ tokens, Price $0 / 1K tokens */}
             </div>
           </Show>
         </Show>
+        <div>
+          <p class="text-xs op-30 mt-1">由于降本增效，GPT4 只有上一条的记忆，GPT3 不受影响😎😎😎。</p>
+        </div>
       </Show>
       <div class="fixed bottom-8 right-4 md:right-8 rounded-md w-fit h-fit transition-colors active:scale-90">
         <button class="text-base" title="stick to bottom" type="button" onClick={() => setStick(!isStick())}>
